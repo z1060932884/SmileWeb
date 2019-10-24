@@ -2,7 +2,9 @@ package com.zzj.learn.controller;
 
 import com.zzj.learn.dao.UserMapper;
 import com.zzj.learn.domain.User;
+import com.zzj.learn.utils.JSONResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +18,11 @@ public class UserController {
 
     @Autowired
     private UserMapper mapper;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @GetMapping("/query")
-    public void query() {
+    public JSONResult query() {
         //查询所有
         List<User> users = mapper.selectList(null);
 
@@ -27,21 +31,27 @@ public class UserController {
         //条件查询 根据指定主键查询记录
         User user = mapper.selectById(1);
         System.out.println(user);
+        return JSONResult.ok(users);
     }
     @GetMapping("/add")
     public void add () {
-        User user = new User("1","Jack",25,"Jack123@163.com");
+//        User user = new User("1","Jack",25,"Jack123@163.com");
 
         //返回影响条数
-        int insert = mapper.insert(user);
-        System.out.println(insert+"条数据受到影响");
+//        int insert = mapper.insert(user);
+        System.out.println(1+"条数据受到影响");
     }
     @GetMapping("/update")
-    public void update() {
-        User user = new User("1","Jimmy",19,"Jimmy123@163.com");
-        //根据主键对记录进行更改 返回影响条数
-        int number = mapper.updateById(user);
-        System.out.println(number+"条数据受到影响");
+    public JSONResult update() {
+//        User user = new User("1","22222","123456","Jimmy",19,"Jimmyadasdasdasda" +
+//                "sdsadasdsadsadsadsdasdsadafsdsaf士大夫金坷");
+//        //根据主键对记录进行更改 返回影响条数
+//        int number = mapper.updateById(user);
+//        stringRedisTemplate.opsForValue().set("a","test");
+//        System.out.println(number+"条数据受到影响"+ stringRedisTemplate.opsForValue().get("a"));
+
+
+        return JSONResult.ok();
     }
 
 

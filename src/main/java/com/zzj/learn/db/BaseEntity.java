@@ -20,8 +20,6 @@ public class BaseEntity implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(updatable = false, nullable = false)
     private String id;
-
-
     // 定义为创建时间戳，在创建时就已经写入
     @CreationTimestamp
     @Column(nullable = true)

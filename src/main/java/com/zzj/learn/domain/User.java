@@ -17,8 +17,12 @@ public class User {
     //如果表中的主键使用了自增 需要在次注解中声明 type = IdType.AUTO（自增）[本人亲测]
     @TableId(value = "id")
     private String id;
-    private String name;
+    private String token;
+    private String password;
+    private String username;
     private Integer age;
     private String email;
+    private String phone;
+    private String nickname;
 
 }

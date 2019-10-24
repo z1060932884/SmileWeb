@@ -11,16 +11,20 @@ import javax.persistence.Table;
 @Table(name = "s_user")
 public class UserDB extends BaseEntity{
 
-    @Expose
-    @Column
-    private String name;
-    @Expose
+    @Column(nullable = false)
+    private String username;
     @Column
     private String age;
-    @Expose
     @Column
     private String email;
-
+    @Column
+    private String token;
+    @Column
+    private String password;
+    @Column(nullable = false)
+    private String phone;
+    @Column
+    private String nickname;
 
 
 }
