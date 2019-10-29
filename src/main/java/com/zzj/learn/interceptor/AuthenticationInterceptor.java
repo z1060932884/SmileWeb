@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.zzj.learn.constant.UserConstants;
 import com.zzj.learn.domain.User;
 import com.zzj.learn.service.LoginService;
+import com.zzj.learn.utils.JSONResult;
 import com.zzj.learn.utils.LoginRequired;
 import com.zzj.learn.utils.TokenUtil;
 import io.jsonwebtoken.Claims;
@@ -46,7 +47,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (methodAnnotation != null) {
             // 判断是否存在令牌信息，如果存在，则允许登录
             String accessToken = request.getHeader(ACCESS_TOKEN);
-
+            System.out.println("Token信息---->"+accessToken);
 
             if (null == accessToken) {
                 throw new Exception("相应的状态码");
@@ -55,7 +56,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 long expire = redisService.getExpire(UserConstants.REDIS_USER + accessToken);
                 if (expire <= 0 ){
                     //不存在该用户
-                    throw new Exception("相应的状态码");
+                    response.setStatus(403);
+                    throw new Exception("Token失效");
                 }
                 Claims claims;
                 try{

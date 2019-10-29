@@ -10,9 +10,9 @@ public class ChatMsgDB {
     @Column(updatable = false, nullable = false)
     private long id;
     @Column(updatable = false, nullable = false)
-    private String sendUserId;
+    private long sendUserId;
     @Column(updatable = false, nullable = false)
-    private String acceptUserId;
+    private long acceptUserId;
     @Column()
     private Integer signFlag;
     @Column(updatable = false, nullable = false)

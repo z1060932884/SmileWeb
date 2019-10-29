@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 public class BaseEntity implements Serializable {
     @Id
     @PrimaryKeyJoinColumn
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(updatable = false, nullable = false)
-    private String id;
+    private long id;
     // 定义为创建时间戳，在创建时就已经写入
     @CreationTimestamp
     @Column(nullable = true)
@@ -31,11 +29,11 @@ public class BaseEntity implements Serializable {
     private LocalDateTime updateAt = LocalDateTime.now();
 
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

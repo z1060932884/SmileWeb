@@ -1,11 +1,10 @@
 package com.zzj.learn.controller;
 
 import com.zzj.learn.dao.UserMapper;
+import com.zzj.learn.domain.PublishModel;
 import com.zzj.learn.domain.User;
-import com.zzj.learn.utils.FastDFSClient;
-import com.zzj.learn.utils.FileUtils;
-import com.zzj.learn.utils.JSONResult;
-import com.zzj.learn.utils.LoginRequired;
+import com.zzj.learn.service.ZoneService;
+import com.zzj.learn.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
-public class UserController {
+@RequestMapping("zone")
+public class ZoneController {
 
     @Autowired
     private UserMapper mapper;
@@ -26,6 +25,8 @@ public class UserController {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private FastDFSClient fastDFSClient;
+    @Autowired
+    ZoneService zoneService;
     @GetMapping("/query")
     public JSONResult query() {
         //查询所有
@@ -58,33 +59,21 @@ public class UserController {
 
         return JSONResult.ok();
     }
-
-
-    /**
-     * 上传图片接口
-     * @param base64Image
-     * @return
-     * @throws Exception
-     */
     @LoginRequired
-    @PostMapping("/uploadImage")
-    private JSONResult uploadImage(String base64Image) throws Exception{
-        //获取前端传过来的base64字符串，然后转换成文件对象再上传
-        String userFacePath = "D:\\"+ System.currentTimeMillis()+".png";
-//        String userFacePath = "/fastdfs/tmp/"+ usersBo.getUserId()+"userFace64.png";
+    @PostMapping("/publish")
+    public JSONResult publish(@CurrentUser User user,String imageUrlList
+            , String content, String location){
+        if(imageUrlList.isEmpty()&&content.isEmpty()){
+            return JSONResult.errorMsg("内容不能为空");
+        }
 
-        FileUtils.base64ToFile(userFacePath,base64Image);
-        //上传文件到fastdfs
-        MultipartFile file = FileUtils.fileToMultipart(userFacePath);
-
-        String url = fastDFSClient.uploadBase64(file);
-        System.out.println(url);
-
-        //获取缩略图的url
-        String thump = "_80x80.";
-        String arr[]  = url.split("\\.");
-        String thumpImageUrl = arr[0] + thump+arr[1];
-        return JSONResult.ok(url);
+        if(user == null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        PublishModel publishModel = zoneService.publish(user.getId(),imageUrlList,content,location);
+        if(publishModel==null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(publishModel);
     }
-
 }

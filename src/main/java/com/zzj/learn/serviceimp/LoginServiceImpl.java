@@ -67,7 +67,6 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public User register(String phone, String password) {
         User user = new User();
-        user.setId(sid.nextShort());
         user.setUsername(uuid());
         user.setPhone(phone);
         user.setPassword(password);

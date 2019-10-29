@@ -23,7 +23,7 @@ public class TokenUtil {
     /**
      * 过期时间
      */
-    public static final long ttlMillis = 10*1000*60;
+    public static final long ttlMillis = 1000*1000*60;
 
     /**
      * 生成token
