@@ -76,4 +76,14 @@ public class ZoneController {
         }
         return JSONResult.ok(publishModel);
     }
+    @LoginRequired
+    @GetMapping("/publishList")
+    public JSONResult getPublishList(){
+
+        List<PublishModel> publishModels =  zoneService.getPublishList();
+        if(publishModels == null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(publishModels);
+    }
 }

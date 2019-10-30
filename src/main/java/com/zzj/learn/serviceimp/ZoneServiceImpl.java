@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ZoneServiceImpl implements ZoneService {
@@ -27,5 +28,10 @@ public class ZoneServiceImpl implements ZoneService {
             return publishModel;
         }
       return null;
+    }
+
+    @Override
+    public List<PublishModel> getPublishList() {
+        return publishMapper.selectList(null);
     }
 }
