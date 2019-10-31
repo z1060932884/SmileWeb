@@ -70,6 +70,7 @@ public class LoginServiceImpl implements LoginService {
         user.setUsername(uuid());
         user.setPhone(phone);
         user.setPassword(password);
+        user.setNickname("sl_"+uuid());
         int index = mapper.insert(user);
         if (index > 0) {
             return user;
@@ -88,6 +89,6 @@ public class LoginServiceImpl implements LoginService {
         if (hashCodeV < 0) {//有可能是负数
             hashCodeV = -hashCodeV;
         }
-        return machineId + String.format("%011d", hashCodeV);
+        return machineId + String.format("%08d", hashCodeV);
     }
 }

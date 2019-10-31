@@ -5,6 +5,7 @@ import com.zzj.learn.domain.PublishModel;
 import com.zzj.learn.domain.User;
 import com.zzj.learn.service.ZoneService;
 import com.zzj.learn.utils.*;
+import com.zzj.learn.vo.PublishCard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,7 +81,7 @@ public class ZoneController {
     @GetMapping("/publishList")
     public JSONResult getPublishList(){
 
-        List<PublishModel> publishModels =  zoneService.getPublishList();
+        List<PublishCard> publishModels =  zoneService.getPublishList();
         if(publishModels == null){
             return JSONResult.errorMsg("服务器异常");
         }

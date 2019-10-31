@@ -57,7 +57,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 if (expire <= 0 ){
                     //不存在该用户
                     response.setStatus(403);
-                    throw new Exception("Token失效");
+                    //                    throw new Exception("Token失效");
+                    return false;
+
                 }
                 Claims claims;
                 try{
