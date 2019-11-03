@@ -50,6 +50,8 @@ public class ZoneServiceImpl implements ZoneService {
                 BeanUtils.copyProperties(publishModel,publishCard);
                User user = userMapper.selectById(publishModel.getUserId());
                publishCard.setNickName(user.getNickname());
+               publishCard.setFaceImage(user.getFaceImage());
+               publishCard.setGender(user.getGender());
                 // TODO: 2019/10/31 头像
 //               publishCard.setImageHeader(user.);
                 return publishCard;

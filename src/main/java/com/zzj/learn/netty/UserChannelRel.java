@@ -11,15 +11,15 @@ import java.util.HashMap;
 public class UserChannelRel {
 
 
-    private static HashMap<String, Channel> manager = new HashMap<>();
+    private static HashMap<Long, Channel> manager = new HashMap<>();
 
 
-    public static void put(String senderId,Channel channel){
+    public static void put(long senderId,Channel channel){
         manager.put(senderId,channel);
 
     }
 
-    public static Channel get(String senderId){
+    public static Channel get(long senderId){
 
         return manager.get(senderId);
     }

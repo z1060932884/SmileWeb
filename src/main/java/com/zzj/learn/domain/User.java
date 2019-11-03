@@ -24,5 +24,8 @@ public class User {
     private String email;
     private String phone;
     private String nickname;
+    private String faceImage;
+    private String description;
+    private int gender;
 
 }

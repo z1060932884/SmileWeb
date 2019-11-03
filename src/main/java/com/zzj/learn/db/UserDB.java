@@ -25,6 +25,11 @@ public class UserDB extends BaseEntity{
     private String phone;
     @Column
     private String nickname;
-
+    @Column
+    private String faceImage;
+    @Column
+    private String description;
+    @Column
+    private int gender;
 
 }

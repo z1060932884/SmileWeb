@@ -2,16 +2,11 @@ package com.zzj.learn.controller;
 
 import com.zzj.learn.dao.UserMapper;
 import com.zzj.learn.domain.User;
-import com.zzj.learn.utils.FastDFSClient;
-import com.zzj.learn.utils.FileUtils;
-import com.zzj.learn.utils.JSONResult;
-import com.zzj.learn.utils.LoginRequired;
+import com.zzj.learn.utils.*;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,6 +21,7 @@ public class UserController {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private FastDFSClient fastDFSClient;
+
     @GetMapping("/query")
     public JSONResult query() {
         //查询所有
@@ -59,6 +55,27 @@ public class UserController {
         return JSONResult.ok();
     }
 
+    @LoginRequired
+    @PostMapping("/updateUserInfo")
+    public JSONResult updateUserInfo(@CurrentUser User currentUser,  @RequestBody User users) throws Exception{
+
+        if(Strings.isBlank(users.getFaceImage())
+                ||Strings.isBlank(users.getNickname())){
+
+            return JSONResult.errorMsg("信息不能为空");
+        }
+
+
+        currentUser.setFaceImage(users.getFaceImage());
+        currentUser.setNickname(users.getNickname());
+        currentUser.setDescription(users.getDescription());
+        currentUser.setGender(users.getGender());
+        int index = mapper.updateById(currentUser);
+        if(index == 0){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(currentUser);
+    }
 
     /**
      * 上传图片接口
@@ -68,7 +85,7 @@ public class UserController {
      */
     @LoginRequired
     @PostMapping("/uploadImage")
-    private JSONResult uploadImage(String base64Image) throws Exception{
+    private JSONResult uploadImage(@CurrentUser User user,String base64Image) throws Exception{
         //获取前端传过来的base64字符串，然后转换成文件对象再上传
         String userFacePath = "D:\\"+ System.currentTimeMillis()+".png";
 //        String userFacePath = "/fastdfs/tmp/"+ usersBo.getUserId()+"userFace64.png";

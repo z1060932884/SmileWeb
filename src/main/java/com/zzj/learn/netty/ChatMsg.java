@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 public class ChatMsg implements Serializable {
 
-    private String senderId;//发送者Id
-    private String receiverId;//接收者Id
+    private long senderId;//发送者Id
+    private long receiverId;//接收者Id
     private String  msg;//聊天内容
     private String  msgId;//消息Id
     private int type;//消息类型
@@ -105,19 +105,19 @@ public class ChatMsg implements Serializable {
         this.itemType = itemType;
     }
 
-    public String getSenderId() {
+    public long getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(String senderId) {
+    public void setSenderId(long senderId) {
         this.senderId = senderId;
     }
 
-    public String getReceiverId() {
+    public long getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(String receiverId) {
+    public void setReceiverId(long receiverId) {
         this.receiverId = receiverId;
     }
 

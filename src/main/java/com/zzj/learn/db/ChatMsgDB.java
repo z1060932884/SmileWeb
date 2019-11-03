@@ -8,7 +8,7 @@ public class ChatMsgDB {
     @Id
     @PrimaryKeyJoinColumn
     @Column(updatable = false, nullable = false)
-    private long id;
+    private String id;
     @Column(updatable = false, nullable = false)
     private long sendUserId;
     @Column(updatable = false, nullable = false)

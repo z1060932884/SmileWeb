@@ -1,7 +1,9 @@
 package com.zzj.learn.netty;
 
 
+import com.zzj.learn.domain.User;
 import com.zzj.learn.enums.MsgActionEnum;
+import com.zzj.learn.service.UserService;
 import com.zzj.learn.utils.JsonUtils;
 import com.zzj.learn.utils.SpringUtil;
 import io.netty.channel.Channel;
@@ -43,18 +45,18 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             //  2.2 聊天类型的消息，把聊天记录保存到数据库，同时标记消息的签收状态（未签收）
             ChatMsg chatMsg = dataContent.getChatMsg();
             String msgText = chatMsg.getMsg();
-            String receiverId = chatMsg.getReceiverId();
-            String senderId = chatMsg.getSenderId();
+            long receiverId = chatMsg.getReceiverId();
+            long senderId = chatMsg.getSenderId();
             chatMsg.setTime(chatMsg.getTime());
             //标记消息已发送成功
             chatMsg.setSend(true);
             chatMsg.setRead(false);
             //单聊
-//            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
-//            userService.saveMsg(chatMsg);
-//            ChatUsers senderUser = userService.queryUserInfoByUserId(senderId);
-//            chatMsg.setFaceImage(senderUser.getFaceImage());
-//            chatMsg.setUserName(senderUser.getNickname());
+            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
+            userService.saveMsg(chatMsg);
+            User senderUser = userService.queryUserInfoByUserId(senderId);
+            chatMsg.setFaceImage(senderUser.getFaceImage());
+            chatMsg.setUserName(senderUser.getNickname());
             //发送消息
             //从全局用户Channel关系中获取接收方channel
             Channel receiverChannel =  UserChannelRel.get(receiverId);
@@ -88,7 +90,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
 
         }else if(action == MsgActionEnum.SIGNED.type){
             //  2.3 签收消息类型，针对具体的消息进行签收，修改数据库中对应消息的签收状态（已签收）
-//            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
+            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
             String msgIdsStr = dataContent.getExtand();
             String[] msgIds = msgIdsStr.split(",");
             List<String> msgIdList = new ArrayList<>();
@@ -100,7 +102,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             if(msgIdList!=null && !msgIdList.isEmpty() && msgIdList.size()>0){
                 //批量签收
 
-//                userService.updateMsgSigned(msgIdList);
+                userService.updateMsgSigned(msgIdList);
             }
 
         }else if(action == MsgActionEnum.PULL_FRIEND.type){
@@ -111,13 +113,13 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
         }else if(action == MsgActionEnum.GROUP_MSG.type){
             //群组消息
             ChatMsg chatMsg = dataContent.getChatMsg();
-            String senderId = chatMsg.getSenderId();
+            long senderId = chatMsg.getSenderId();
             chatMsg.setTime(chatMsg.getTime());
             //标记消息已发送成功
             chatMsg.setSend(true);
             chatMsg.setRead(false);
-//            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
-//            userService.saveMsg(chatMsg);
+            UserService userService = (UserService) SpringUtil.getBean("userServiceImp");
+            userService.saveMsg(chatMsg);
 
             //通知发送者已收到消息并保存数据库
             DataContent notifyData = new DataContent();
@@ -128,7 +130,7 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
             UserChannelRel.get(senderId).writeAndFlush(new TextWebSocketFrame(JsonUtils.objectToJson(notifyData)));
 
             //1、获取群的id
-            String groupId = chatMsg.getReceiverId();
+            long groupId = chatMsg.getReceiverId();
 //            PushFactory.pushGroupMessage(senderId,groupId,chatMsg);
 
         }

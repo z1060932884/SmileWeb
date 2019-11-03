@@ -22,5 +22,6 @@ public class PublishCard {
     private Date createAt;
     private Date updateAt;
     private String nickName;
-    private String imageHeader;
+    private String faceImage;
+    private int gender;
 }

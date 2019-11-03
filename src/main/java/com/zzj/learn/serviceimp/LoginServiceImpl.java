@@ -70,7 +70,6 @@ public class LoginServiceImpl implements LoginService {
         user.setUsername(uuid());
         user.setPhone(phone);
         user.setPassword(password);
-        user.setNickname("sl_"+uuid());
         int index = mapper.insert(user);
         if (index > 0) {
             return user;
