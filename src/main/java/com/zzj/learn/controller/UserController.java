@@ -9,7 +9,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("user")
@@ -76,6 +78,26 @@ public class UserController {
         }
         return JSONResult.ok(currentUser);
     }
+    /**
+     * 文件上传
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping("/upload/file")
+    @ResponseBody
+    public JSONResult uploadFile(@RequestParam("file") MultipartFile file) throws Exception{
+        String url = null;
+        try {
+            url = fastDFSClient.uploadFile(file);
+            System.out.println("上传文件的路径-->"+url);
+           return JSONResult.ok(url);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return JSONResult.errorMsg(e.getMessage());
+        }
+    }
+
 
     /**
      * 上传图片接口
