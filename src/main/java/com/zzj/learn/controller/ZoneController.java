@@ -60,6 +60,15 @@ public class ZoneController {
 
         return JSONResult.ok();
     }
+
+    /**
+     * 发布动态 信息
+     * @param user
+     * @param imageUrlList
+     * @param content
+     * @param location
+     * @return
+     */
     @LoginRequired
     @PostMapping("/publish")
     public JSONResult publish(@CurrentUser User user,String imageUrlList
@@ -77,6 +86,11 @@ public class ZoneController {
         }
         return JSONResult.ok(publishModel);
     }
+
+    /**
+     * 获取动态列表
+     * @return
+     */
     @LoginRequired
     @GetMapping("/publishList")
     public JSONResult getPublishList(){
@@ -87,4 +101,29 @@ public class ZoneController {
         }
         return JSONResult.ok(publishModels);
     }
+
+    /**
+     * 获取动态详情
+     * @return
+     */
+    @LoginRequired
+    @GetMapping("/getDynamic")
+    public JSONResult getDynamicById(long dynamicId){
+
+        PublishCard publishModel =  zoneService.getDynamicById(dynamicId);
+        if(publishModel == null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(publishModel);
+    }
+
+    /**
+     * replyTime : 2017-06-24 17:23:40
+     * replayUserId : b2f1f00a615941588e85f927dc8620a0
+     * replayUserName : heyanmin
+     * id : 8ab8c3cb0e2248f08aded1ed97959014
+     * replyContent : 你好
+     * userName : 砳砳007
+     * userId : 70c09944c0544a8c98ab5e6e94e3d452
+     */
 }

@@ -13,4 +13,10 @@ public interface ZoneService {
             , String content, String location);
 
     List<PublishCard> getPublishList();
+
+    /**
+     * 获取动态详情
+     * @return
+     */
+    PublishCard getDynamicById(long id);
 }
