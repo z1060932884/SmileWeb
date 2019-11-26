@@ -1,6 +1,8 @@
 package com.zzj.learn.controller;
 
+import com.zzj.learn.dao.ImageManagerMapper;
 import com.zzj.learn.dao.UserMapper;
+import com.zzj.learn.domain.ImageManagerModel;
 import com.zzj.learn.domain.User;
 import com.zzj.learn.utils.*;
 import org.apache.logging.log4j.util.Strings;
@@ -9,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,9 @@ public class UserController {
 
     @Autowired
     private UserMapper mapper;
+    @Autowired
+    private ImageManagerMapper imageManagerMapper;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -84,6 +90,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
+    @LoginRequired
     @RequestMapping("/upload/file")
     @ResponseBody
     public JSONResult uploadFile(@RequestParam("file") MultipartFile file) throws Exception{
@@ -119,10 +126,19 @@ public class UserController {
         String url = fastDFSClient.uploadBase64(file);
         System.out.println(url);
 
-        //获取缩略图的url
-        String thump = "_80x80.";
-        String arr[]  = url.split("\\.");
-        String thumpImageUrl = arr[0] + thump+arr[1];
+//        //获取缩略图的url
+//        String thump = "_80x80.";
+//        String arr[]  = url.split("\\.");
+//        String thumpImageUrl = arr[0] + thump+arr[1];
+        ImageManagerModel imageManagerModel = new ImageManagerModel();
+        imageManagerModel.setCreateAt(new Date());
+        imageManagerModel.setUpdateAt(new Date());
+        imageManagerModel.setUrl(url);
+        imageManagerModel.setUserId(user.getId());
+        int index = imageManagerMapper.insert(imageManagerModel);
+        if (index  == 0){
+            return JSONResult.errorMsg("上传失败");
+        }
         return JSONResult.ok(url);
     }
 
