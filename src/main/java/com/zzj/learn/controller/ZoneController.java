@@ -10,10 +10,7 @@ import com.zzj.learn.vo.PublishCard;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -126,7 +123,7 @@ public class ZoneController {
      */
     @LoginRequired
     @PostMapping("/sendComment")
-    public JSONResult sendComment(CommentCard commentCard){
+    public JSONResult sendComment(@RequestBody CommentCard commentCard){
         if(StringUtils.isBlank(commentCard.getCommentContent())){
             return JSONResult.errorMsg("评论内容不能为空");
         }
