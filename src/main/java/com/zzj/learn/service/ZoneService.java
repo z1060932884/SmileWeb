@@ -1,6 +1,7 @@
 package com.zzj.learn.service;
 
 import com.zzj.learn.domain.PublishModel;
+import com.zzj.learn.vo.CommentCard;
 import com.zzj.learn.vo.PublishCard;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +20,18 @@ public interface ZoneService {
      * @return
      */
     PublishCard getDynamicById(long id);
+
+    /**
+     * 评论
+     * @param commentCard
+     * @return
+     */
+    CommentCard sendComment(CommentCard commentCard);
+
+    /**
+     * 回复评论
+     * @param commentCard
+     * @return
+     */
+    CommentCard sendReplyComment(CommentCard commentCard);
 }

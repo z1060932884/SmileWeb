@@ -1,11 +1,16 @@
 package com.zzj.learn.serviceimp;
 
+import com.zzj.learn.dao.CommentMapper;
+import com.zzj.learn.dao.ReplyCommentMapper;
 import com.zzj.learn.dao.UserMapper;
 import com.zzj.learn.dao.ZonePublishMapper;
+import com.zzj.learn.domain.CommentModel;
 import com.zzj.learn.domain.PublishModel;
+import com.zzj.learn.domain.ReplyCommentModel;
 import com.zzj.learn.domain.User;
 import com.zzj.learn.service.ZoneService;
 import com.zzj.learn.utils.SpringUtil;
+import com.zzj.learn.vo.CommentCard;
 import com.zzj.learn.vo.PublishCard;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,10 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    CommentMapper commentMapper;
+    @Autowired
+    ReplyCommentMapper replyCommentMapper;
     @Override
     public PublishModel publish(long userId,String imageUrlList, String content, String location) {
         PublishModel publishModel = new PublishModel();
@@ -69,4 +78,31 @@ public class ZoneServiceImpl implements ZoneService {
         publishCard.setGender(user.getGender());
         return publishCard;
     }
+
+    @Override
+    public CommentCard sendComment(CommentCard commentCard) {
+        CommentModel commentModel = new CommentModel();
+        BeanUtils.copyProperties(commentCard,commentModel);
+        commentModel.setCreateAt(new Date());
+        commentModel.setUpdateAt(new Date());
+        int index = commentMapper.insert(commentModel);
+        if(index>0){
+            return commentCard;
+        }
+        return null;
+    }
+
+    @Override
+    public CommentCard sendReplyComment(CommentCard commentCard) {
+        ReplyCommentModel commentModel = new ReplyCommentModel();
+        BeanUtils.copyProperties(commentCard,commentModel);
+        commentModel.setCreateAt(new Date());
+        commentModel.setUpdateAt(new Date());
+        int index = replyCommentMapper.insert(commentModel);
+        if(index>0){
+            return commentCard;
+        }
+        return null;
+    }
+
 }

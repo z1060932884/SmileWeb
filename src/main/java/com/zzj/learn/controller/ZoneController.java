@@ -5,7 +5,9 @@ import com.zzj.learn.domain.PublishModel;
 import com.zzj.learn.domain.User;
 import com.zzj.learn.service.ZoneService;
 import com.zzj.learn.utils.*;
+import com.zzj.learn.vo.CommentCard;
 import com.zzj.learn.vo.PublishCard;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,6 +119,28 @@ public class ZoneController {
         return JSONResult.ok(publishModel);
     }
 
+    /**
+     * 发送评论
+     * @param commentCard
+     * @return
+     */
+    @LoginRequired
+    @PostMapping("/sendComment")
+    public JSONResult sendComment(CommentCard commentCard){
+        if(StringUtils.isBlank(commentCard.getCommentContent())){
+            return JSONResult.errorMsg("评论内容不能为空");
+        }
+        CommentCard commentCard1 = null;
+       if(commentCard.getReplyUserId()!=0){
+          commentCard1 = zoneService.sendReplyComment(commentCard);
+       }else {
+          commentCard1 = zoneService.sendComment(commentCard);
+       }
+        if(commentCard1 == null){
+            return JSONResult.errorMsg("评论发送失败");
+        }
+        return JSONResult.ok();
+    }
     /**
      * replyTime : 2017-06-24 17:23:40
      * replayUserId : b2f1f00a615941588e85f927dc8620a0
