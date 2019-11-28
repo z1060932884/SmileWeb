@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +25,5 @@ public class PublishCard {
     private String nickName;
     private String faceImage;
     private int gender;
+    private List<CommentCard> commentList;
 }

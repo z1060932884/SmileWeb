@@ -1,5 +1,8 @@
 package com.zzj.learn.serviceimp;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zzj.learn.dao.CommentMapper;
 import com.zzj.learn.dao.ReplyCommentMapper;
 import com.zzj.learn.dao.UserMapper;
@@ -70,12 +73,28 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public PublishCard getDynamicById(long id) {
         PublishModel publishModel = publishMapper.selectById(id);
+        //查询评论
+        QueryWrapper<CommentModel> queryWrapper01 = new QueryWrapper<>();
+        queryWrapper01.eq("dynamic_id",id);
+        Page<CommentModel> page = new Page<>(1,3);
+
+        IPage<CommentModel> commentModelIPage = commentMapper.selectPage(page,queryWrapper01);
+        List<CommentModel> commentModels = commentModelIPage.getRecords();
+        List<CommentCard> commentCards = commentModels.stream().map(new Function<CommentModel, CommentCard>() {
+            @Override
+            public CommentCard apply(CommentModel commentModel) {
+                CommentCard commentCard = new CommentCard();
+                BeanUtils.copyProperties(commentModel,commentCard);
+                return commentCard;
+            }
+        }).collect(Collectors.toList());
         PublishCard publishCard = new PublishCard();
         BeanUtils.copyProperties(publishModel,publishCard);
         User user = userMapper.selectById(publishModel.getUserId());
         publishCard.setNickName(user.getNickname());
         publishCard.setFaceImage(user.getFaceImage());
         publishCard.setGender(user.getGender());
+        publishCard.setCommentList(commentCards);
         return publishCard;
     }
 

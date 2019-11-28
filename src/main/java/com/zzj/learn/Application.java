@@ -1,5 +1,6 @@
 package com.zzj.learn;
 
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.zzj.learn.utils.SpringUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,5 +28,14 @@ public class Application extends SpringBootServletInitializer{
                 .configure(new SpringApplicationBuilder(Application.class))
                 .run(args);
     }
+
+    /*
+     * 分页插件
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor(){
+        return new PaginationInterceptor();
+    }
+
 
 }
