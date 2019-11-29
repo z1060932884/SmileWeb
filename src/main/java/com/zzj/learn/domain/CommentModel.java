@@ -34,4 +34,13 @@ public class CommentModel {
      * 评论的内容
      */
     private String commentContent;
+
+    /**
+     *  被回复评论昵称
+     */
+    private String nickName;
+    /**
+     *  被回复评论人头像
+     */
+    private String faceImage;
 }

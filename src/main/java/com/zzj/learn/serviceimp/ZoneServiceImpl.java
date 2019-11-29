@@ -76,7 +76,7 @@ public class ZoneServiceImpl implements ZoneService {
         //查询评论
         QueryWrapper<CommentModel> queryWrapper01 = new QueryWrapper<>();
         queryWrapper01.eq("dynamic_id",id);
-        Page<CommentModel> page = new Page<>(1,3);
+        Page<CommentModel> page = new Page<>(1,4);
 
         IPage<CommentModel> commentModelIPage = commentMapper.selectPage(page,queryWrapper01);
         List<CommentModel> commentModels = commentModelIPage.getRecords();

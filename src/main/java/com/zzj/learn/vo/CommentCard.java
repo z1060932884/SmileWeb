@@ -37,4 +37,21 @@ public class CommentCard implements Serializable {
      * 回复评论的UserId
      */
     private long replyUserId;
+
+    /**
+     *  被回复评论昵称
+     */
+    private String nickName;
+    /**
+     *  被回复评论人头像
+     */
+    private String faceImage;
+    /**
+     * 回复评论的昵称
+     */
+    private String replyNickName;
+    /**
+     * 回复评论的UserId
+     */
+    private String replyFaceImage;
 }
