@@ -26,4 +26,12 @@ public class PublishCard {
     private String faceImage;
     private int gender;
     private List<CommentCard> commentList;
+    /**
+     * 是否关注
+     */
+    private boolean isAttention;
+    /**
+     * 是否点赞当前动态
+     */
+    private boolean isFavoriteDynamic;
 }

@@ -1,5 +1,6 @@
 package com.zzj.learn.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.zzj.learn.dao.ImageManagerMapper;
 import com.zzj.learn.dao.UserMapper;
 import com.zzj.learn.domain.ImageManagerModel;
@@ -139,6 +140,7 @@ public class UserController {
         if (index  == 0){
             return JSONResult.errorMsg("上传失败");
         }
+        FileUtil.del(userFacePath);
         return JSONResult.ok(url);
     }
 

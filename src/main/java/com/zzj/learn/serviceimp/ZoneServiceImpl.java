@@ -3,14 +3,8 @@ package com.zzj.learn.serviceimp;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zzj.learn.dao.CommentMapper;
-import com.zzj.learn.dao.ReplyCommentMapper;
-import com.zzj.learn.dao.UserMapper;
-import com.zzj.learn.dao.ZonePublishMapper;
-import com.zzj.learn.domain.CommentModel;
-import com.zzj.learn.domain.PublishModel;
-import com.zzj.learn.domain.ReplyCommentModel;
-import com.zzj.learn.domain.User;
+import com.zzj.learn.dao.*;
+import com.zzj.learn.domain.*;
 import com.zzj.learn.service.ZoneService;
 import com.zzj.learn.utils.SpringUtil;
 import com.zzj.learn.vo.CommentCard;
@@ -36,6 +30,10 @@ public class ZoneServiceImpl implements ZoneService {
     CommentMapper commentMapper;
     @Autowired
     ReplyCommentMapper replyCommentMapper;
+    @Autowired
+    AttentionMapper attentionMapper;
+    @Autowired
+    FavoriteDynamicMapper favoriteDynamicMapper;
     @Override
     public PublishModel publish(long userId,String imageUrlList, String content, String location) {
         PublishModel publishModel = new PublishModel();
@@ -71,7 +69,7 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public PublishCard getDynamicById(long id) {
+    public PublishCard getDynamicById(long userId,long id) {
         PublishModel publishModel = publishMapper.selectById(id);
         //查询评论
         QueryWrapper<CommentModel> queryWrapper01 = new QueryWrapper<>();
@@ -88,6 +86,22 @@ public class ZoneServiceImpl implements ZoneService {
                 return commentCard;
             }
         }).collect(Collectors.toList());
+        //是否关注
+        AttentionModel attentionModel = queryAttentionById(userId,publishModel.getUserId());
+        boolean isAttention = false;
+        if(attentionModel == null){
+            isAttention = false;
+        }else {
+            isAttention = true;
+        }
+        //是否点赞
+        FavoriteDynamicModel favoriteDynamicModel = queryFavoriteDynamicById(userId,id);
+        boolean isFavoriteDynamic = false;
+        if(favoriteDynamicModel == null){
+            isFavoriteDynamic = false;
+        }else {
+            isFavoriteDynamic = true;
+        }
         PublishCard publishCard = new PublishCard();
         BeanUtils.copyProperties(publishModel,publishCard);
         User user = userMapper.selectById(publishModel.getUserId());
@@ -95,6 +109,8 @@ public class ZoneServiceImpl implements ZoneService {
         publishCard.setFaceImage(user.getFaceImage());
         publishCard.setGender(user.getGender());
         publishCard.setCommentList(commentCards);
+        publishCard.setAttention(isAttention);
+        publishCard.setFavoriteDynamic(isFavoriteDynamic);
         return publishCard;
     }
 
@@ -122,6 +138,63 @@ public class ZoneServiceImpl implements ZoneService {
             return commentCard;
         }
         return null;
+    }
+
+    @Override
+    public int attention(long userId, long attentionUserId) {
+        AttentionModel attentionModel = queryAttentionById(userId,attentionUserId);
+        if(attentionModel == null){
+            attentionModel = new AttentionModel();
+            attentionModel.setCreateAt(new Date());
+            attentionModel.setUpdateAt(new Date());
+            attentionModel.setFollowUserId(userId);
+            attentionModel.setFollowedUserId(attentionUserId);
+            return attentionMapper.insert(attentionModel);
+        }else {
+            QueryWrapper<AttentionModel> queryWrapper01 = new QueryWrapper<>();
+            queryWrapper01.eq("follow_user_id",userId);
+            queryWrapper01.eq("followed_user_id",attentionUserId);
+            return attentionMapper.delete(queryWrapper01);
+        }
+    }
+
+    @Override
+    public AttentionModel queryAttentionById(long userId, long attentionUserId) {
+        //查询是否已经关注
+        QueryWrapper<AttentionModel> queryWrapper01 = new QueryWrapper<>();
+        queryWrapper01.eq("follow_user_id",userId);
+        queryWrapper01.eq("followed_user_id",attentionUserId);
+        AttentionModel attentionModel = attentionMapper.selectOne(queryWrapper01);
+        return attentionModel;
+    }
+
+    @Override
+    public FavoriteDynamicModel queryFavoriteDynamicById(long userId, long favoriteDynamicId) {
+        //查询是否已经关注
+        QueryWrapper<FavoriteDynamicModel> queryWrapper01 = new QueryWrapper<>();
+        queryWrapper01.eq("user_id",userId);
+        queryWrapper01.eq("dynamic_id",favoriteDynamicId);
+        FavoriteDynamicModel favoriteDynamicModel = favoriteDynamicMapper.selectOne(queryWrapper01);
+        return favoriteDynamicModel;
+    }
+
+    @Override
+    public int favoriteDynamic(long id, long favoriteDynamicId) {
+        //查询是否已经关注
+        QueryWrapper<FavoriteDynamicModel> queryWrapper01 = new QueryWrapper<>();
+        queryWrapper01.eq("user_id",id);
+        queryWrapper01.eq("dynamic_id",favoriteDynamicId);
+        FavoriteDynamicModel favoriteDynamicModel = favoriteDynamicMapper.selectOne(queryWrapper01);
+        if(favoriteDynamicModel == null){
+            favoriteDynamicModel = new FavoriteDynamicModel();
+            favoriteDynamicModel.setCreateAt(new Date());
+            favoriteDynamicModel.setUpdateAt(new Date());
+            favoriteDynamicModel.setUserId(id);
+            favoriteDynamicModel.setDynamicId(favoriteDynamicId);
+            return favoriteDynamicMapper.insert(favoriteDynamicModel);
+        }else {
+            return favoriteDynamicMapper.delete(queryWrapper01);
+        }
     }
 
 }

@@ -147,4 +147,40 @@ public class ZoneController {
      * userName : 砳砳007
      * userId : 70c09944c0544a8c98ab5e6e94e3d452
      */
+
+    /**
+     * 关注人
+     *attentionUserId 关注人的id
+     * @return
+     */
+    @LoginRequired
+    @PostMapping("/attention")
+    public JSONResult attention(@CurrentUser User user,long attentionUserId){
+        if(attentionUserId == 0){
+            return JSONResult.errorMsg("关注人id不能为空");
+        }
+
+        int index = zoneService.attention(user.getId(),attentionUserId);
+        if(index == 0){
+            return JSONResult.errorMsg("执行失败");
+        }
+        return JSONResult.ok("");
+    }
+    /**
+     * 点赞动态
+     *
+     * @return
+     */
+    @LoginRequired
+    @PostMapping("/favoriteDynamic")
+    public JSONResult favoriteDynamic(@CurrentUser User user,long favoriteDynamicId){
+        if(favoriteDynamicId == 0){
+            return JSONResult.errorMsg("动态id不能为空");
+        }
+        int index = zoneService.favoriteDynamic(user.getId(),favoriteDynamicId);
+        if(index == 0){
+            return JSONResult.errorMsg("执行失败");
+        }
+        return JSONResult.ok("");
+    }
 }
