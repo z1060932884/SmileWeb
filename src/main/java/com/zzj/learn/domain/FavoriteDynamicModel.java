@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("s_attention")
+@TableName("s_favorite_dynamic")
 public class FavoriteDynamicModel {
 
     @TableId(value = "id",type = IdType.AUTO)

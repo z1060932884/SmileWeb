@@ -107,9 +107,9 @@ public class ZoneController {
      */
     @LoginRequired
     @GetMapping("/getDynamic")
-    public JSONResult getDynamicById(long dynamicId){
+    public JSONResult getDynamicById(@CurrentUser User user, long dynamicId){
 
-        PublishCard publishModel =  zoneService.getDynamicById(dynamicId);
+        PublishCard publishModel =  zoneService.getDynamicById(user.getId(),dynamicId);
         if(publishModel == null){
             return JSONResult.errorMsg("服务器异常");
         }
