@@ -23,6 +23,7 @@ public interface ZoneService {
      */
     PublishCard getDynamicById(long userId,long id);
 
+    List<PublishCard> getDynamicListById(long userId,long id,int page,int pagesize);
     /**
      * 评论
      * @param commentCard

@@ -115,6 +115,20 @@ public class ZoneController {
         }
         return JSONResult.ok(publishModel);
     }
+    /**
+     * 获取动态详情
+     * @return
+     */
+    @LoginRequired
+    @GetMapping("/getDynamicList")
+    public JSONResult getDynamicListById(@CurrentUser User user, long dynamicId,int page,int pagesize){
+
+        List<PublishCard> publishModel =  zoneService.getDynamicListById(user.getId(),dynamicId,page,pagesize);
+        if(publishModel == null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(publishModel);
+    }
 
     /**
      * 发送评论
@@ -159,7 +173,6 @@ public class ZoneController {
         if(attentionUserId == 0){
             return JSONResult.errorMsg("关注人id不能为空");
         }
-
         int index = zoneService.attention(user.getId(),attentionUserId);
         if(index == 0){
             return JSONResult.errorMsg("执行失败");
