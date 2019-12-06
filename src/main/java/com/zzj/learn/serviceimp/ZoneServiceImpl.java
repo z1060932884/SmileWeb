@@ -118,7 +118,7 @@ public class ZoneServiceImpl implements ZoneService {
     public List<PublishCard> getDynamicListById(long userId,long id,int page,int pagesize) {
         QueryWrapper<PublishModel> publishModelQueryWrapper = new QueryWrapper<>();
         //查询等于大于id
-        publishModelQueryWrapper.or().gt("id", id);
+        publishModelQueryWrapper.eq("id", id).or().gt("id", id);
         publishModelQueryWrapper.notLike("user_id", userId);
         Page<PublishModel> publishModelPage = new Page<>(page, pagesize);
         IPage<PublishModel> publishModelIPage = publishMapper.selectPage(publishModelPage, publishModelQueryWrapper);
