@@ -52,7 +52,10 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public List<PublishCard> getPublishList() {
-        List<PublishModel> publishModels = publishMapper.selectList(null);
+        QueryWrapper<PublishModel> publishModelQueryWrapper = new QueryWrapper<>();
+
+        publishModelQueryWrapper.orderByDesc("create_at");
+        List<PublishModel> publishModels = publishMapper.selectList(publishModelQueryWrapper);
         return publishModels.stream().map(new Function<PublishModel, PublishCard>() {
             @Override
             public PublishCard apply(PublishModel publishModel) {
@@ -120,6 +123,7 @@ public class ZoneServiceImpl implements ZoneService {
         //查询等于大于id
         publishModelQueryWrapper.eq("id", id).or().gt("id", id);
         publishModelQueryWrapper.notLike("user_id", userId);
+        publishModelQueryWrapper.orderByDesc("create_at");
         Page<PublishModel> publishModelPage = new Page<>(page, pagesize);
         IPage<PublishModel> publishModelIPage = publishMapper.selectPage(publishModelPage, publishModelQueryWrapper);
         List<PublishModel> publishModels = publishModelIPage.getRecords();
@@ -187,8 +191,11 @@ public class ZoneServiceImpl implements ZoneService {
         //查询等于大于id
         publishModelQueryWrapper.eq("id", id).or().gt("id", id);*/
         Page<PublishModel> publishModelPage = new Page<>(page, pagesize);
-        IPage<PublishModel> publishModelIPage = publishMapper.selectPage(publishModelPage, publishModelQueryWrapper);
+        IPage<PublishModel> publishModelIPage = publishMapper.attentionDynamicList(publishModelPage,userId );
         List<PublishModel> publishModels = publishModelIPage.getRecords();
+        for(PublishModel publishModel : publishModels){
+            System.out.println("----->"+publishModel.getContent());
+        }
         List < PublishCard > publishCardList = publishModels.stream().map(new Function<PublishModel, PublishCard>() {
             @Override
             public PublishCard apply(PublishModel publishModel) {
