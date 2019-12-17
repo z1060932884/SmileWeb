@@ -172,6 +172,66 @@ public class ZoneServiceImpl implements ZoneService {
 
         return publishCardList;
     }
+
+    @Override
+    public List<PublishCard> attentionDynamicList(long userId, int page, int pagesize) {
+        QueryWrapper<PublishModel> publishModelQueryWrapper = new QueryWrapper<>();
+       /* //是否关注
+        AttentionModel attentionModel = queryAttentionById(userId, publishModel.getUserId());
+        boolean isAttention = false;
+        if (attentionModel == null) {
+            isAttention = false;
+        } else {
+            isAttention = true;
+        }
+        //查询等于大于id
+        publishModelQueryWrapper.eq("id", id).or().gt("id", id);*/
+        Page<PublishModel> publishModelPage = new Page<>(page, pagesize);
+        IPage<PublishModel> publishModelIPage = publishMapper.selectPage(publishModelPage, publishModelQueryWrapper);
+        List<PublishModel> publishModels = publishModelIPage.getRecords();
+        List < PublishCard > publishCardList = publishModels.stream().map(new Function<PublishModel, PublishCard>() {
+            @Override
+            public PublishCard apply(PublishModel publishModel) {
+                //查询评论
+                QueryWrapper<CommentModel> queryWrapper01 = new QueryWrapper<>();
+                queryWrapper01.eq("dynamic_id", publishModel.getId());
+                Page<CommentModel> commentModelPage = new Page<>(1, 4);
+
+                IPage<CommentModel> commentModelIPage = commentMapper.selectPage(commentModelPage, queryWrapper01);
+                List<CommentModel> commentModels = commentModelIPage.getRecords();
+                List<CommentCard> commentCards = commentModels.stream().map(new Function<CommentModel, CommentCard>() {
+                    @Override
+                    public CommentCard apply(CommentModel commentModel) {
+                        CommentCard commentCard = new CommentCard();
+                        BeanUtils.copyProperties(commentModel, commentCard);
+                        return commentCard;
+                    }
+                }).collect(Collectors.toList());
+
+                //是否点赞
+                FavoriteDynamicModel favoriteDynamicModel = queryFavoriteDynamicById(userId, publishModel.getId());
+                boolean isFavoriteDynamic = false;
+                if (favoriteDynamicModel == null) {
+                    isFavoriteDynamic = false;
+                } else {
+                    isFavoriteDynamic = true;
+                }
+                PublishCard publishCard = new PublishCard();
+                BeanUtils.copyProperties(publishModel, publishCard);
+                User user = userMapper.selectById(publishModel.getUserId());
+                publishCard.setNickName(user.getNickname());
+                publishCard.setFaceImage(user.getFaceImage());
+                publishCard.setGender(user.getGender());
+                publishCard.setCommentList(commentCards);
+                publishCard.setAttention(true);
+                publishCard.setFavoriteDynamic(isFavoriteDynamic);
+                return publishCard;
+            }
+        }).collect(Collectors.toList());
+
+        return publishCardList;
+    }
+
     @Override
     public CommentCard sendComment(CommentCard commentCard) {
         CommentModel commentModel = new CommentModel();

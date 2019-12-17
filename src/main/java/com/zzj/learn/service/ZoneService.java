@@ -24,6 +24,15 @@ public interface ZoneService {
     PublishCard getDynamicById(long userId,long id);
 
     List<PublishCard> getDynamicListById(long userId,long id,int page,int pagesize);
+
+    /**
+     * 关注的动态列表
+     * @param userId
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    List<PublishCard> attentionDynamicList(long userId,int page,int pagesize);
     /**
      * 评论
      * @param commentCard
