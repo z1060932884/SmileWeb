@@ -1,5 +1,6 @@
 package com.zzj.learn.controller;
 
+import com.zzj.learn.dao.ImageManagerMapper;
 import com.zzj.learn.dao.UserMapper;
 import com.zzj.learn.domain.PublishModel;
 import com.zzj.learn.domain.User;
@@ -21,12 +22,15 @@ public class ZoneController {
 
     @Autowired
     private UserMapper mapper;
+
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private FastDFSClient fastDFSClient;
     @Autowired
     ZoneService zoneService;
+
+
     @GetMapping("/query")
     public JSONResult query() {
         //查询所有
@@ -209,4 +213,20 @@ public class ZoneController {
         }
         return JSONResult.ok("");
     }
+
+    /**
+     * 获取相册
+     *
+     * @return
+     */
+    @LoginRequired
+    @GetMapping("/getAlbum")
+    public JSONResult getAlbum(@CurrentUser User user,long userId,int page,int pagesize){
+        if(userId == 0){
+            return JSONResult.errorMsg("用户不能为空");
+        }
+        return JSONResult.ok(zoneService.getAlbum(userId,page,pagesize));
+    }
+
+
 }

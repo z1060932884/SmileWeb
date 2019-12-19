@@ -34,6 +34,9 @@ public class ZoneServiceImpl implements ZoneService {
     AttentionMapper attentionMapper;
     @Autowired
     FavoriteDynamicMapper favoriteDynamicMapper;
+
+    @Autowired
+    private ImageManagerMapper imageManagerMapper;
     @Override
     public PublishModel publish(long userId,String imageUrlList, String content, String location) {
         PublishModel publishModel = new PublishModel();
@@ -320,6 +323,15 @@ public class ZoneServiceImpl implements ZoneService {
         }else {
             return favoriteDynamicMapper.delete(queryWrapper01);
         }
+    }
+
+    @Override
+    public List<ImageManagerModel> getAlbum(long userId,int page,int pagesize) {
+        QueryWrapper<ImageManagerModel> queryWrapper01 = new QueryWrapper<>();
+        queryWrapper01.eq("user_id", userId);
+        Page<ImageManagerModel> page1 = new Page<>(page, pagesize);
+        IPage<ImageManagerModel> managerModelIPage = imageManagerMapper.selectPage(page1,queryWrapper01);
+        return managerModelIPage.getRecords();
     }
 
 }

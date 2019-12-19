@@ -2,6 +2,7 @@ package com.zzj.learn.service;
 
 import com.zzj.learn.domain.AttentionModel;
 import com.zzj.learn.domain.FavoriteDynamicModel;
+import com.zzj.learn.domain.ImageManagerModel;
 import com.zzj.learn.domain.PublishModel;
 import com.zzj.learn.vo.CommentCard;
 import com.zzj.learn.vo.PublishCard;
@@ -72,4 +73,11 @@ public interface ZoneService {
      * @return
      */
     int favoriteDynamic(long id, long favoriteDynamicId);
+
+    /**
+     * 获取用户相册数据
+     * @param userId
+     * @return
+     */
+    List<ImageManagerModel> getAlbum(long userId,int page,int pagesize);
 }
