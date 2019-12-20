@@ -34,6 +34,15 @@ public interface ZoneService {
      * @return
      */
     List<PublishCard> attentionDynamicList(long userId,int page,int pagesize);
+
+    /**
+     * 根据userId查询动态列表
+     * @param userId
+     * @param page
+     * @param pagesize
+     * @return
+     */
+    public List<PublishCard> getDynamicListByUserId(long userId,int page,int pagesize);
     /**
      * 评论
      * @param commentCard

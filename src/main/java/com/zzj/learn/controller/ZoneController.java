@@ -133,7 +133,7 @@ public class ZoneController {
         }
         return JSONResult.ok(publishModel);
     }
-    /**
+       /**
      * 获取关注的动态列表
      * @return
      */
@@ -141,6 +141,19 @@ public class ZoneController {
     @GetMapping("/attentionDynamicList")
     public JSONResult attentionDynamicList(@CurrentUser User user,int page,int pagesize){
         List<PublishCard> cardList = zoneService.attentionDynamicList(user.getId(),page,pagesize);
+        if(cardList == null){
+            return JSONResult.errorMsg("服务器异常");
+        }
+        return JSONResult.ok(cardList);
+    }
+    /**
+     * 根据userId获取动态列表
+     * @return
+     */
+    @LoginRequired
+    @GetMapping("/getDynamicListByUserId")
+    public JSONResult getDynamicListByUserId(@CurrentUser User user,long userId,int page,int pagesize){
+        List<PublishCard> cardList = zoneService.getDynamicListByUserId(userId,page,pagesize);
         if(cardList == null){
             return JSONResult.errorMsg("服务器异常");
         }
