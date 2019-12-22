@@ -54,11 +54,16 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public List<PublishCard> getPublishList() {
+    public List<PublishCard> getPublishList(long userId,int page,int pagesize) {
         QueryWrapper<PublishModel> publishModelQueryWrapper = new QueryWrapper<>();
-
+        if(userId != 0){
+            publishModelQueryWrapper.eq("user_id",userId);
+        }
         publishModelQueryWrapper.orderByDesc("create_at");
-        List<PublishModel> publishModels = publishMapper.selectList(publishModelQueryWrapper);
+
+        Page<PublishModel> modelPage = new Page<>(page,pagesize);
+
+        List<PublishModel> publishModels = publishMapper.selectPage(modelPage,publishModelQueryWrapper).getRecords();
         return publishModels.stream().map(new Function<PublishModel, PublishCard>() {
             @Override
             public PublishCard apply(PublishModel publishModel) {

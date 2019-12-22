@@ -16,7 +16,7 @@ public interface ZoneService {
     PublishModel publish(long userId,String imageUrlList
             , String content, String location);
 
-    List<PublishCard> getPublishList();
+    List<PublishCard> getPublishList(long userId,int page,int pagesize);
 
     /**
      * 获取动态详情

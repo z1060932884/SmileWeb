@@ -96,9 +96,9 @@ public class ZoneController {
      */
     @LoginRequired
     @GetMapping("/publishList")
-    public JSONResult getPublishList(){
+    public JSONResult getPublishList(long userId,int page,int pagesize){
 
-        List<PublishCard> publishModels =  zoneService.getPublishList();
+        List<PublishCard> publishModels =  zoneService.getPublishList(userId,page,pagesize);
         if(publishModels == null){
             return JSONResult.errorMsg("服务器异常");
         }
